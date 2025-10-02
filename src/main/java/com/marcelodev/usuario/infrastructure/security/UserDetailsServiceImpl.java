@@ -1,7 +1,7 @@
 package com.marcelodev.usuario.infrastructure.security;
 
-import com.marcelo.javanauta.infraestructure.entity.Usuario;
-import com.marcelo.javanauta.infraestructure.repository.UsuarioRepository;
+import com.marcelodev.usuario.infrastructure.entity.Usuario;
+import com.marcelodev.usuario.infrastructure.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
