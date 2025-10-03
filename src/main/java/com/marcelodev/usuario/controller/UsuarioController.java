@@ -62,4 +62,10 @@ public class UsuarioController {
         service.removerUsuario(email);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping
+    public ResponseEntity<Void> atualizaUsuario(@RequestBody UsuarioDTO dto, @RequestHeader("Authorization") String token) {
+        service.atualizaDadosUsuario(token, dto);
+        return ResponseEntity.noContent().build();
+    }
 }

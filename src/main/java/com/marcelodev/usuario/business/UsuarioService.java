@@ -6,6 +6,7 @@ import com.marcelodev.usuario.infrastructure.entity.Usuario;
 import com.marcelodev.usuario.infrastructure.exception.ConflicException;
 import com.marcelodev.usuario.infrastructure.exception.ResourceNotFoundException;
 import com.marcelodev.usuario.infrastructure.repository.UsuarioRepository;
+import com.marcelodev.usuario.infrastructure.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class UsuarioService {
     private final UsuarioRepository repository;
     private final UsuarioConverter converter;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     public UsuarioDTO salvaUsuario(UsuarioDTO dto) {
         emailExiste(dto.getEmail());
@@ -49,7 +51,22 @@ public class UsuarioService {
     }
 
     public void removerUsuario(String email) {
+
         repository.deleteByEmail(email);
+    }
+
+    public UsuarioDTO atualizaDadosUsuario(String token, UsuarioDTO dto) {
+        String email = jwtUtil.extrairEmailToken(token.substring(7));
+
+        dto.setSenha(dto.getSenha() != null ? passwordEncoder.encode(dto.getSenha()) : null);
+
+        Usuario usuarioEntity = repository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("email não encontrado!"));
+
+        Usuario usuario = converter.updateUsuario(dto, usuarioEntity);
+
+        return converter.paraUsuarioDTO(repository.save(usuario));
+
     }
 
 }
