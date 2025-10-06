@@ -2,6 +2,8 @@ package com.marcelodev.usuario.controller;
 
 import com.marcelodev.usuario.business.UsuarioService;
 import com.marcelodev.usuario.business.converter.UsuarioConverter;
+import com.marcelodev.usuario.business.dto.EnderecoDTO;
+import com.marcelodev.usuario.business.dto.TelefoneDTO;
 import com.marcelodev.usuario.business.dto.UsuarioDTO;
 import com.marcelodev.usuario.infrastructure.entity.Usuario;
 import com.marcelodev.usuario.infrastructure.security.JwtUtil;
@@ -51,15 +53,39 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<UsuarioDTO>buscarPorEmail(@RequestParam("email") String email) {
-        Usuario usuarioEncontrado = service.buscarUsuarioPorEmail(email);
+    public ResponseEntity<UsuarioDTO> buscarPorEmail(@RequestParam("email") String email) {
+        UsuarioDTO usuarioEncontrado = service.buscarUsuarioPorEmail(email);
 
-        return ResponseEntity.ok(converter.paraUsuarioDTO(usuarioEncontrado));
+        return ResponseEntity.ok(usuarioEncontrado);
     }
 
     @DeleteMapping("/{email}")
     public ResponseEntity<Void> remover(@PathVariable String email) {
         service.removerUsuario(email);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> atualizaUsuario(@RequestBody UsuarioDTO dto, @RequestHeader("Authorization") String token) {
+        service.atualizaDadosUsuario(token, dto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/endereco")
+    public ResponseEntity<EnderecoDTO> atualizaEndereco(@RequestParam("id") Long id, @RequestBody EnderecoDTO dto) {
+
+        EnderecoDTO enderecoDTO = service.atualizaEndereco(id, dto);
+
+        return ResponseEntity.ok(enderecoDTO);
+
+    }
+
+    @PutMapping("/telefone")
+    public ResponseEntity<TelefoneDTO> atualizaTelefone(@RequestParam("id") Long id, @RequestBody TelefoneDTO dto) {
+
+        TelefoneDTO telefoneDTO = service.atualizaTelefone(id, dto);
+
+        return ResponseEntity.ok(telefoneDTO );
+
     }
 }
