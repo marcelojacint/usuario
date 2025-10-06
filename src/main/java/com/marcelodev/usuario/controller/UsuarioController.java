@@ -85,7 +85,38 @@ public class UsuarioController {
 
         TelefoneDTO telefoneDTO = service.atualizaTelefone(id, dto);
 
-        return ResponseEntity.ok(telefoneDTO );
+        return ResponseEntity.ok(telefoneDTO);
+
+    }
+
+    @PostMapping("/endereco")
+    public ResponseEntity<EnderecoDTO> salvaEndereco(@RequestHeader("Authorization") String token, @RequestBody EnderecoDTO dto) {
+
+        EnderecoDTO enderecoDTO = service.cadastraEndereco(token, dto);
+
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("id")
+                .buildAndExpand(enderecoDTO.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(enderecoDTO);
+
+    }
+
+    @PostMapping("/telefone")
+    public ResponseEntity<TelefoneDTO> salvaTelefone(@RequestHeader("Authorization") String token, @RequestBody TelefoneDTO dto) {
+
+        TelefoneDTO telefoneDTO = service.cadastraTelefone(token, dto);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("id")
+                .buildAndExpand(telefoneDTO.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(telefoneDTO);
 
     }
 }
